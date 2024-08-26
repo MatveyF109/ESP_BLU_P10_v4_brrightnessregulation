@@ -475,3 +475,81 @@ void washWheels() {
   motors.stopMotors();
   u.info(S_DONE);
 }
+
+char res;
+// void processKoefsAdj(char mode) {
+//   switch (mode) {
+//     case 'a':
+//       res = 'a';
+//       u.info("KP++");
+//       break;
+//     case 'b':
+//       res = 'b';
+//       break;
+//     case 'c':
+//       res = 'c';
+//       break;
+//     case 'd':
+//       res = 'd';
+//       break;
+//     case 'e':
+//       res = 'e';
+//       break;
+//     case 'f':
+//       res = 'f';
+//       break;
+//     case 'g':
+//       res = 'g';
+//       break;
+//     case 'h':
+//       res = 'h';
+//       break;
+//     case 'i':
+//       res = 'i';
+//       break;
+//     case 'j':
+//       res = 'j';
+//       break;
+//     case 'k':
+//       res = 'k';
+//       break;
+//     case 'l':
+//       res = 'l';
+//       break;
+//     case 'm':
+//       res = 'm';
+//       break;
+//     case 'n':
+//       res = 'n';
+//       break;
+//     case 'o':
+//       res = 'o';
+//       break;
+//     case 'x':
+      // STARTED = false;
+      // WAS_STARTED = false;
+      // PREPARED = false;
+      // MOVE_BOT = false;
+      // motors.goFan(0);
+      // motors.stopMotors();
+      // B1_PRESSED = false;
+      // B2_PRESSED = false;
+      // digitalWrite(LED_BUILTIN, LOW);
+      // u.info(S_ALL_STOPPED);
+      // u.info("Last cycle time: " + String(cycleDuration));
+//     case 10:
+      // STARTED = false;
+      // WAS_STARTED = false;
+      // PREPARED = false;
+      // MOVE_BOT = false;
+      // motors.goFan(0);
+      // motors.stopMotors();
+      // B1_PRESSED = false;
+      // B2_PRESSED = false;
+      // digitalWrite(LED_BUILTIN, LOW);
+      // u.info(S_ALL_STOPPED);
+      // u.info("Last cycle time: " + String(cycleDuration));
+//     default:
+//       SerialBT.println("ERROR, NO MATCHING MODE FOUND");
+//   }
+// }
