@@ -7,8 +7,18 @@
 #include "BluetoothSerial.h"
 #include "Params.h"
 
-#define USE_PIN            // Uncomment this to use PIN during pairing. The pin is specified on the line below
+//#define USE_PIN            // Uncomment this to use PIN during pairing. The pin is specified on the line below
 const char *pin = "1234";  // Change this to more secure PIN.
+
+String device_name = "ESP32-V10_DC6612";
+
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+
+#if !defined(CONFIG_BT_SPP_ENABLED)
+#error Serial Bluetooth not available or not enabled. It is only available for the ESP32 chip.
+#endif
 
 uint16_t SENSOR_BUF[SENSOR_BUF_SIZE];
 float ERROR_BUF_D[128];
@@ -16,7 +26,7 @@ float ERROR_BUF_I[128];
 
 const bool ALLOW_MOVE = true;  //разрешить движение
 const bool ALLOW_FAN = true;   //разрешить турбину
-const bool EMULATION = false;  //тестовый сигнал датчика
+const bool EMULATION = true;   //тестовый сигнал датчика
 
 bool MOVE_BOT = false;
 bool PREPARED = false;
@@ -56,7 +66,6 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   String filePath = __FILE__;
   String fileName = filePath.substring(filePath.lastIndexOf("\\") + 1);
-  String device_name = "ESP32-V10_DC6612";
   pinMode(SENSOR_IN, INPUT);
   pinMode(BUTTON1, INPUT_PULLUP);
   pinMode(BUTTON2, INPUT_PULLUP);
@@ -65,6 +74,7 @@ void setup() {
   EEPROM.begin(EEPROM_SIZE);
   Serial.setTimeout(200);
   Serial.begin(115200);
+  Serial.println("STARTED");
   SerialBT.setTimeout(200);
   SerialBT.begin(device_name);
   // #ifdef USE_PIN
@@ -80,7 +90,7 @@ void setup() {
   u.info("---------------------------");
   u.info(fileName);
   u.info("----------START------------");
-  u.info(""); 
+  u.info("");
 
   p.loadParams(1);
 
@@ -121,6 +131,7 @@ float bot_position() {
 }
 
 void loop() {
+  //Serial.println("1");
   readButtons();
   if (!MOVE_BOT) {
     digitalWrite(LED_BUILTIN, LOW);
@@ -169,6 +180,7 @@ void loop() {
       lastCycleTime = micros();
     }
     if (STARTED) {
+      digitalWrite(LED_BUILTIN, HIGH);
       if (!WAS_STARTED) {
         //p.loadParams(p.presetNo);  //restore base speed etc. from EEPROM
         if (u.getPrintMode() == PrintMode::Graph) {
@@ -281,7 +293,7 @@ void doPIDMove(float error, bool allowMove, char speedMode, float kP, float kD, 
     //3000:z,3000:l:0.11,3000:n:0.12:0.21,3000:f:0.13:0.22:10,3000:t:0.14:0.23:20:0.06
 
     String debugStr2;
-    debugStr = String(millis()-gStartTime) + " mode:" + speedMode;
+    debugStr = String(millis() - gStartTime) + " mode:" + speedMode;
     debugStr = debugStr + " " + p.S.kP + ":" + String(kP) + " " + p.S.kD + ":" + String(kD) + " " + p.S.D_AGE + ":" + String(ageD);
     debugStr = debugStr + " " + p.S.kI + ":" + String(kI) + " " + p.S.I_AGE + ":" + String(ageI);
     debugStr = debugStr + " runSpeed:" + String(runSpeed) + " turnSpeed:" + String(turnSpeed) + " brakeSpeed:" + String(brakeSpeed);
