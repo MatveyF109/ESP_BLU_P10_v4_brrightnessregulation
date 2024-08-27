@@ -142,37 +142,38 @@ void loop() {
     processMenu();
   } else {
     digitalWrite(LED_BUILTIN, HIGH);
-    if ((u.available() > 0) || B2_PRESSED || TIME_ENDED) {
+    if (!STARTED && ((u.available() > 0) || B2_PRESSED || TIME_ENDED)) {
       int ch = u.read();
       B1_PRESSED = false;
       TIME_ENDED = false;
-      if (!PREPARED && !STARTED && (ch == 120 || B2_PRESSED)) {
+      if (!PREPARED && (ch == 120 || B2_PRESSED)) {
         ch = u.read();
         motors.goFan(p.P.FAN_SPEED_IDLE);
         PREPARED = true;
         B1_PRESSED = false;
         B2_PRESSED = false;
         u.info(S_BOT_PREPARED);
-      } else if (PREPARED && !STARTED && (ch == 10 || B2_PRESSED)) {
+      } else if (PREPARED && (ch == 10 || B2_PRESSED)) {
         STARTED = true;
         B1_PRESSED = false;
         B2_PRESSED = false;
         u.info(S_BOT_STARTED);
         gStartTime = millis();
         p.setStartRunTime(gStartTime);
-      } else {
-        STARTED = false;
-        WAS_STARTED = false;
-        PREPARED = false;
-        MOVE_BOT = false;
-        motors.goFan(0);
-        motors.stopMotors();
-        B1_PRESSED = false;
-        B2_PRESSED = false;
-        digitalWrite(LED_BUILTIN, LOW);
-        u.info(S_ALL_STOPPED);
-        u.info("Last cycle time: " + String(cycleDuration));
       }
+      // else {
+      //   STARTED = false;
+      //   WAS_STARTED = false;
+      //   PREPARED = false;
+      //   MOVE_BOT = false;
+      //   motors.goFan(0);
+      //   motors.stopMotors();
+      //   B1_PRESSED = false;
+      //   B2_PRESSED = false;
+      //   digitalWrite(LED_BUILTIN, LOW);
+      //   u.info(S_ALL_STOPPED);
+      //   u.info("Last cycle time: " + String(cycleDuration));
+      // }
     }
     if (PREPARED && !STARTED) {
       doMove(false);
@@ -180,7 +181,23 @@ void loop() {
       lastCycleTime = micros();
     }
     if (STARTED) {
-      digitalWrite(LED_BUILTIN, HIGH);
+      static byte prevBytesAm = 0;
+      static uint32_t tmr = 0;
+      byte bytesAm = u.available();
+      if (bytesAm != prevBytesAm) {
+        prevBytesAm = bytesAm;
+        tmr = millis();
+      }
+      if ((bytesAm & millis() - tmr > 10) || bytesAm > 28) {
+        char ch = u.read();
+        // u.info("////////////////////////////////////////////////////////////////////////////////////////////////");
+        // u.info(ch);
+        // u.info("////////////////////////////////////////////////////////////////////////////////////////////////");
+        processKoefsAdj(ch);
+        //char ent = u.read();
+        serialFlush();
+      }
+      //digitalWrite(LED_BUILTIN, HIGH);
       if (!WAS_STARTED) {
         //p.loadParams(p.presetNo);  //restore base speed etc. from EEPROM
         if (u.getPrintMode() == PrintMode::Graph) {
