@@ -477,79 +477,132 @@ void washWheels() {
 }
 
 char res;
-// void processKoefsAdj(char mode) {
-//   switch (mode) {
-//     case 'a':
-//       res = 'a';
-//       u.info("KP++");
-//       break;
-//     case 'b':
-//       res = 'b';
-//       break;
-//     case 'c':
-//       res = 'c';
-//       break;
-//     case 'd':
-//       res = 'd';
-//       break;
-//     case 'e':
-//       res = 'e';
-//       break;
-//     case 'f':
-//       res = 'f';
-//       break;
-//     case 'g':
-//       res = 'g';
-//       break;
-//     case 'h':
-//       res = 'h';
-//       break;
-//     case 'i':
-//       res = 'i';
-//       break;
-//     case 'j':
-//       res = 'j';
-//       break;
-//     case 'k':
-//       res = 'k';
-//       break;
-//     case 'l':
-//       res = 'l';
-//       break;
-//     case 'm':
-//       res = 'm';
-//       break;
-//     case 'n':
-//       res = 'n';
-//       break;
-//     case 'o':
-//       res = 'o';
-//       break;
-//     case 'x':
-      // STARTED = false;
-      // WAS_STARTED = false;
-      // PREPARED = false;
-      // MOVE_BOT = false;
-      // motors.goFan(0);
-      // motors.stopMotors();
-      // B1_PRESSED = false;
-      // B2_PRESSED = false;
-      // digitalWrite(LED_BUILTIN, LOW);
-      // u.info(S_ALL_STOPPED);
-      // u.info("Last cycle time: " + String(cycleDuration));
-//     case 10:
-      // STARTED = false;
-      // WAS_STARTED = false;
-      // PREPARED = false;
-      // MOVE_BOT = false;
-      // motors.goFan(0);
-      // motors.stopMotors();
-      // B1_PRESSED = false;
-      // B2_PRESSED = false;
-      // digitalWrite(LED_BUILTIN, LOW);
-      // u.info(S_ALL_STOPPED);
-      // u.info("Last cycle time: " + String(cycleDuration));
-//     default:
-//       SerialBT.println("ERROR, NO MATCHING MODE FOUND");
-//   }
-// }
+int dP = 0;
+int dD = 0;
+int dI = 0;
+void processKoefsAdj(char mode) {
+  switch (mode) {
+    case 'a':
+      res = 'a';
+      u.info("KP++");
+      p.P.kP = p.P.kP + 0.02;
+      dP = dP + 0.02;
+      break;
+    case 'b':
+      res = 'b';
+      u.info("KP+");
+      p.P.kP = p.P.kP + 0.01;
+      dP = dP + 0.01;
+      break;
+    case 'c':
+      res = 'c';
+      u.info("KP-");
+      p.P.kP = p.P.kP - 0.01;
+      dP = dP - 0.01;
+      break;
+    case 'd':
+      res = 'd';
+      u.info("KP--");
+      p.P.kP = p.P.kP - 0.02;
+      dP = dP - 0.02;
+      break;
+    case 'e':
+      res = 'e';
+      u.info("KD++");
+      p.P.kD = p.P.kD + 0.02;
+      dD = dD + 0.02;
+      break;
+    case 'f':
+      res = 'f';
+      u.info("KD+");
+      p.P.kD = p.P.kD + 0.01;
+      dD = dD + 0.01;
+      break;
+    case 'g':
+      res = 'g';
+      u.info("KD-");
+      p.P.kD = p.P.kD - 0.01;
+      dD = dD - 0.01;
+      break;
+    case 'h':
+      res = 'h';
+      u.info("KD--");
+      p.P.kD = p.P.kD - 0.02;
+      dD = dD - 0.02;
+      break;
+    case 'i':
+      res = 'i';
+      u.info("KI++");
+      p.P.kI = p.P.kI + 0.02;
+      dI = dI + 0.02;
+      break;
+    case 'j':
+      res = 'j';
+      u.info("KI+");
+      p.P.kI = p.P.kI + 0.01;
+      dI = dI + 0.01;
+      break;
+    case 'k':
+      res = 'k';
+      u.info("KI-");
+      p.P.kI = p.P.kI - 0.01;
+      dI = dI - 0.01;
+      break;
+    case 'l':
+      res = 'l';
+      u.info("KI--");
+      p.P.kI = p.P.kI - 0.02;
+      dI = dI - 0.02;
+      break;
+    case 'm':
+      res = 'm';
+      u.info("KP=def");
+      p.P.kP = p.P.kP - dP;
+      dP = 0;
+      break;
+    case 'n':
+      res = 'n';
+      u.info("KD=def");
+      p.P.kD = p.P.kD - dD;
+      dD = 0;
+      break;
+    case 'o':
+      res = 'o';
+      u.info("KI=def");
+      p.P.kI = p.P.kI - dI;
+      dI = 0;
+      break;
+    case 'x':
+      STARTED = false;
+      WAS_STARTED = false;
+      PREPARED = false;
+      MOVE_BOT = false;
+      motors.goFan(0);
+      motors.stopMotors();
+      B1_PRESSED = false;
+      B2_PRESSED = false;
+      digitalWrite(LED_BUILTIN, LOW);
+      u.info(S_ALL_STOPPED);
+      u.info("Last cycle time: " + String(cycleDuration));
+    case 10:
+      STARTED = false;
+      WAS_STARTED = false;
+      PREPARED = false;
+      MOVE_BOT = false;
+      motors.goFan(0);
+      motors.stopMotors();
+      B1_PRESSED = false;
+      B2_PRESSED = false;
+      digitalWrite(LED_BUILTIN, LOW);
+      u.info(S_ALL_STOPPED);
+      u.info("Last cycle time: " + String(cycleDuration));
+    default:
+      SerialBT.println("ERROR, NO MATCHING MODE FOUND");
+  }
+}
+
+void serialFlush(){
+  while(u.available() > 0) {
+    char t = u.read();
+  }
+}
