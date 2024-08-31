@@ -157,11 +157,11 @@ void processMenu() {
     case 'q':
       testSensors();
       break;
-    case 'b':  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      u.info(S_ENTER_SENSOR_BRIGHTNESS);
-      enterParams(PARAMS_BRIGHTNESS);
-      p.saveParams(p.presetNo);
-      break;
+    // case 'b':  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //   u.info(S_ENTER_SENSOR_BRIGHTNESS);
+    //   enterParams(PARAMS_BRIGHTNESS);
+    //   p.saveParams(p.presetNo);
+    //   break;
     case 'f':
       p.P.USE_FAN = !p.P.USE_FAN;
       u.info(p.S.USE_FAN + S_SET_TO + String(p.P.USE_FAN));
